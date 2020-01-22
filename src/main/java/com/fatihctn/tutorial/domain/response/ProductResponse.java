@@ -1,5 +1,6 @@
 package com.fatihctn.tutorial.domain.response;
 
+import com.fatihctn.tutorial.domain.entity.Category;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,4 +15,6 @@ public class ProductResponse {
     private String title;
 
     private Double price;
+
+    private Category category;
 }

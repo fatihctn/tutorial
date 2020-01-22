@@ -1,5 +1,6 @@
 package com.fatihctn.tutorial.service;
 
+import com.fatihctn.tutorial.domain.entity.Category;
 import com.fatihctn.tutorial.domain.entity.Product;
 import com.fatihctn.tutorial.domain.request.ProductRequest;
 import com.fatihctn.tutorial.exception.product.ProductNotFoundException;
@@ -37,7 +38,7 @@ public class ProductServiceTest {
 
     @Test
     public void whenFindId_thenProductFound() throws Exception {
-        Optional<Product> product = Optional.of(new Product(1L,"Demo", 1.00));
+        Optional<Product> product = Optional.of(new Product(1L,"Demo", 1.00, new Category()));
         Mockito.when(repository.findById(anyLong())).thenReturn(product);
         Product actualProduct = productService.findById(1L);
 
@@ -46,9 +47,10 @@ public class ProductServiceTest {
 
     @Test
     public void whenSave_thenProductSaved() {
-        ProductRequest productRequest = new ProductRequest("Demo", 1.00);
+        Category category = new Category(1, "Deneme", null);
+        ProductRequest productRequest = new ProductRequest("Demo", 1.00, category);
         Product requestedProduct = new Product("Demo", 1.00);
-        Product expectedProduct = new Product(1L, "Demo", 1.00);
+        Product expectedProduct = new Product(1L, "Demo", 1.00, category);
 
         Mockito.when(mapper.toProductFromRequest(productRequest)).thenReturn(requestedProduct);
         Mockito.when(repository.save(requestedProduct)).thenReturn(expectedProduct);

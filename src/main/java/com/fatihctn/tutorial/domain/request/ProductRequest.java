@@ -1,5 +1,6 @@
 package com.fatihctn.tutorial.domain.request;
 
+import com.fatihctn.tutorial.domain.entity.Category;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,4 +18,6 @@ public class ProductRequest {
 
     @DecimalMin(value = "0.00")
     private Double price;
+
+    private Category category;
 }
