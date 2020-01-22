@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class ProductNotFoundException extends Exception {
     private static final long serialVersionUID = -7521709338282062047L;
 
-    public ProductNotFoundException(Long productId) {
-        super("Product not found with id=" + productId);
+    public ProductNotFoundException(Long entityId) {
+        super("Product not found with id=" + entityId);
     }
 }

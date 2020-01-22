@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class ProductService {
+public class ProductService implements RepositoryService<Product, Long> {
     private final static Logger logger = LoggerFactory.getLogger(ProductService.class);
 
     @Autowired
@@ -22,6 +22,7 @@ public class ProductService {
     @Autowired
     private ProductMapper mapper;
 
+    @Override
     public Product findById(Long id) throws Exception {
         Optional<Product> product = repository.findById(id);
         if (!product.isPresent()) {
@@ -30,8 +31,8 @@ public class ProductService {
         return product.get();
     }
 
-    public Product save(ProductRequest productRequest) {
-        Product product = mapper.toProductFromRequest(productRequest);
+    public Product save(ProductRequest request) {
+        Product product = mapper.toProductFromRequest(request);
         return repository.save(product);
     }
 
