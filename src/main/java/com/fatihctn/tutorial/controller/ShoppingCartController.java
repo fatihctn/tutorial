@@ -3,6 +3,7 @@ package com.fatihctn.tutorial.controller;
 import com.fatihctn.tutorial.domain.request.CartItemRequest;
 import com.fatihctn.tutorial.domain.response.ShoppingCartResponse;
 import com.fatihctn.tutorial.service.CampaignService;
+import com.fatihctn.tutorial.service.CouponService;
 import com.fatihctn.tutorial.service.ProductService;
 import com.fatihctn.tutorial.service.ShoppingCart;
 import com.fatihctn.tutorial.util.RequestUtil;
@@ -30,6 +31,9 @@ public class ShoppingCartController {
     private ProductService productService;
 
     @Autowired
+    private CouponService couponService;
+
+    @Autowired
     private RequestUtil requestUtil;
 
     @RequestMapping(method = RequestMethod.POST, value = "/add-item")
@@ -49,7 +53,14 @@ public class ShoppingCartController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/apply-campaign/{id}")
-    public void applyCampaign(@PathVariable("id") Integer id) {
+    public void applyCampaign(@PathVariable("id") Integer id) throws Exception {
+        logger.info("User applied campaign. clientIp: {}", requestUtil.getClientIp());
+        shoppingCart.applyCampaign(campaignService.findById(id));
+    }
 
+    @RequestMapping(method = RequestMethod.POST, value = "/apply-coupon/{id}")
+    public void applyCoupon(@PathVariable("id") Integer id) throws Exception {
+        logger.info("User applied coupon. clientIp: {}", requestUtil.getClientIp());
+        shoppingCart.applyCoupon(couponService.findById(id));
     }
 }
