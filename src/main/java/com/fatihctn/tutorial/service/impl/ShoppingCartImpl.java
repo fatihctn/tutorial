@@ -150,11 +150,10 @@ public class ShoppingCartImpl implements ShoppingCart {
     }
 
     public ShoppingCartResponse getDetails() {
-        ShoppingCartResponse cartResponse = new ShoppingCartResponse();
-        cartResponse.setItems(this.items.stream().map(this::generateCartItemToResponse).collect(Collectors.toList()));
-        cartResponse.setTotalPrice(this.getTotalAmountAfterDiscounts());
-        cartResponse.setDeliveryCost(this.getDeliveryCost());
-        return cartResponse;
+        return ShoppingCartResponse.builder()
+                .items(this.items.stream().map(this::generateCartItemToResponse).collect(Collectors.toList()))
+                .totalPrice(this.getTotalAmountAfterDiscounts())
+                .deliveryCost(this.getDeliveryCost()).build();
     }
 
     @Override

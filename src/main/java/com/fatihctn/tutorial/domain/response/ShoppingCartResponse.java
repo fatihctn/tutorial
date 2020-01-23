@@ -8,7 +8,6 @@ import lombok.Setter;
 import java.util.List;
 
 @Getter @Setter
-@NoArgsConstructor
 @Builder
 public class ShoppingCartResponse {
     private List<CartItemResponse> items;
