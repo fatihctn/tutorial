@@ -8,10 +8,10 @@ import com.fatihctn.tutorial.util.RequestUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -29,7 +29,7 @@ public class CategoryController {
     private RequestUtil requestUtil;
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
-    public CategoryResponse getId(@RequestParam("id") Integer id) throws Exception {
+    public CategoryResponse getId(@PathVariable("id") Integer id) throws Exception {
         logger.debug("Category getting by Id: {}", id);
         return categoryMapper.toCategoryResponseFromCategory(categoryService.findById(id));
     }

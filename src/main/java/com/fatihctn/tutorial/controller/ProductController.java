@@ -8,10 +8,10 @@ import com.fatihctn.tutorial.util.RequestUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,7 +31,7 @@ public class ProductController {
     private RequestUtil requestUtil;
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
-    public ProductResponse getId(@RequestPart("id") Long id) throws Exception {
+    public ProductResponse getId(@PathVariable("id") Long id) throws Exception {
         logger.debug("Product getting by Id: {}", id);
         return productMapper.toProductResponseFromProduct(productService.findById(id));
     }
