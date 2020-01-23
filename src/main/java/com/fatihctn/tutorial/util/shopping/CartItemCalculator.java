@@ -7,6 +7,6 @@ public class CartItemCalculator implements Calculator<CartItem, Double> {
 
     @Override
     public Double calculateFor(CartItem item) {
-        return null;
+        return item.getProduct().getPrice() * item.getQty();
     }
 }

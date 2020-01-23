@@ -17,5 +17,6 @@ public class CartItem implements Serializable {
     private Product product;
     private Integer qty;
     private Double totalAmount;
+    private Double totalAmountWithCampaign;
 
 }

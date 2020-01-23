@@ -12,4 +12,6 @@ public class CartItemResponse {
     private Integer quantity;
     private Double unitPrice;
     private Double totalPrice;
+    private Double totalDiscount;
+    private Double totalLastPrice;
 }
