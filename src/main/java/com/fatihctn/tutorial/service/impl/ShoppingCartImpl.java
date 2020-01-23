@@ -11,6 +11,7 @@ import com.fatihctn.tutorial.service.ShoppingCart;
 import com.fatihctn.tutorial.util.Calculator;
 import com.fatihctn.tutorial.util.shopping.CampaignCalculator;
 import com.fatihctn.tutorial.util.shopping.CartItemCalculator;
+import com.fatihctn.tutorial.util.shopping.CouponCalculator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,8 @@ public class ShoppingCartImpl implements ShoppingCart {
 
     private Campaign campaign;
 
+    private Coupon coupon;
+
     private CartItemCalculator cartItemCalculator= new CartItemCalculator();
 
     private CampaignCalculator campaignCalculator = new CampaignCalculator();
@@ -45,6 +48,7 @@ public class ShoppingCartImpl implements ShoppingCart {
         this.uniqueProducts.add(product);
         this.items.add(generateCartItem(product, quantity));
         updateCartWithCampaign();
+        updateCartWithCoupon();
     }
 
     private void updateCartWithCampaign() {
@@ -61,6 +65,18 @@ public class ShoppingCartImpl implements ShoppingCart {
     private void detectActiveCampaign() {
         getCampaignDiscount();
         this.campaign = campaignCalculator.getActualCampaign();
+    }
+
+    private void updateCartWithCoupon() {
+        if (this.coupon == null) return;
+        double subTotalWithCampaign = getTotalAmount() - getCampaignDiscount();
+        if (subTotalWithCampaign >= this.coupon.getMinCartAmount()) {
+            CouponCalculator couponCalculator = new CouponCalculator(coupon);
+            this.items
+                    .forEach(cartItem -> cartItem.setTotalAmountWithCoupon(
+                            cartItem.getTotalAmountWithCampaign() - couponCalculator.calculateFor(cartItem)
+                    ));
+        }
     }
 
     private CartItem generateCartItem(Product product, Integer qty) {
@@ -103,6 +119,19 @@ public class ShoppingCartImpl implements ShoppingCart {
     }
 
     @Override
+    public Double getCouponDiscount() {
+        double totalAmount = 0.00D;
+        for (CartItem cartItem: items) {
+            totalAmount += cartItem.getTotalAmountWithCampaign() - cartItem.getTotalAmountWithCoupon();
+        }
+        return totalAmount;
+    }
+
+    private Double getTotalAmountAfterCampaign() {
+        return this.items.stream().mapToDouble(CartItem::getTotalAmountWithCoupon).sum();
+    }
+
+    @Override
     public Double getTotalAmountAfterDiscounts() {
         return getTotalAmount() - getCampaignDiscount();
     }
@@ -121,6 +150,11 @@ public class ShoppingCartImpl implements ShoppingCart {
 
     public void applyCampaigns(Campaign... campaigns) {
         this.campaigns.addAll(Arrays.asList(campaigns));
+    }
+
+    @Override
+    public void applyCoupon(Coupon coupon) {
+        this.coupon = coupon;
     }
 
     @Override
