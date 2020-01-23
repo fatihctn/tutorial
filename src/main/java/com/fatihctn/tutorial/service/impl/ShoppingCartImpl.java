@@ -1,5 +1,6 @@
 package com.fatihctn.tutorial.service.impl;
 
+import com.fatihctn.tutorial.config.DeliveryConfig;
 import com.fatihctn.tutorial.domain.entity.Campaign;
 import com.fatihctn.tutorial.domain.entity.CartItem;
 import com.fatihctn.tutorial.domain.entity.Category;
@@ -12,6 +13,7 @@ import com.fatihctn.tutorial.util.Calculator;
 import com.fatihctn.tutorial.util.shopping.CampaignCalculator;
 import com.fatihctn.tutorial.util.shopping.CartItemCalculator;
 import com.fatihctn.tutorial.util.shopping.CouponCalculator;
+import com.fatihctn.tutorial.util.shopping.DeliveryCostCalculator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -96,10 +98,12 @@ public class ShoppingCartImpl implements ShoppingCart {
         return uniqueProducts;
     }
 
-    private Integer getNumberOfCategories() {
+    @Override
+    public Integer getNumberOfCategories() {
         return this.uniqueCategories.size();
     }
 
+    @Override
     public Integer getNumberOfProducts() {
         return this.uniqueProducts.size();
     }
@@ -132,14 +136,24 @@ public class ShoppingCartImpl implements ShoppingCart {
     }
 
     @Override
+    public Double getDeliveryCost() {
+        DeliveryCostCalculator deliveryCostCalculator = new DeliveryCostCalculator(
+                DeliveryConfig.DELIVERY_COST_PER_DELIVERY,
+                DeliveryConfig.DELIVERY_COST_PER_PRODUCT,
+                DeliveryConfig.DELIVERY_FIXED_COST);
+        return deliveryCostCalculator.calculateFor(this);
+    }
+
+    @Override
     public Double getTotalAmountAfterDiscounts() {
-        return getTotalAmount() - getCampaignDiscount();
+        return getTotalAmountAfterCampaign();
     }
 
     public ShoppingCartResponse getDetails() {
         ShoppingCartResponse cartResponse = new ShoppingCartResponse();
         cartResponse.setItems(this.items.stream().map(this::generateCartItemToResponse).collect(Collectors.toList()));
-        cartResponse.setTotalPrice(getTotalAmount());
+        cartResponse.setTotalPrice(this.getTotalAmountAfterDiscounts());
+        cartResponse.setDeliveryCost(this.getDeliveryCost());
         return cartResponse;
     }
 
@@ -171,7 +185,7 @@ public class ShoppingCartImpl implements ShoppingCart {
         cartItemResponse.setCategoryName(cartItem.getProduct().getCategory().getTitle());
         cartItemResponse.setProductName(cartItem.getProduct().getTitle());
         cartItemResponse.setQuantity(cartItem.getQty());
-        cartItemResponse.setTotalPrice(cartItem.getTotalAmount());
+        cartItemResponse.setTotalPrice(cartItem.getTotalAmountWithCoupon());
         cartItemResponse.setUnitPrice(cartItem.getProduct().getPrice());
         return cartItemResponse;
     }

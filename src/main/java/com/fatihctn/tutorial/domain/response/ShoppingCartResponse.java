@@ -13,4 +13,5 @@ import java.util.List;
 public class ShoppingCartResponse {
     private List<CartItemResponse> items;
     private Double totalPrice;
+    private Double deliveryCost;
 }

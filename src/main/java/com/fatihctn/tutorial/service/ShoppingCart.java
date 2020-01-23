@@ -18,6 +18,8 @@ public interface ShoppingCart {
 
     public abstract Double getCouponDiscount();
 
+    public abstract Double getDeliveryCost();
+
     public abstract Double getTotalAmountAfterDiscounts();
 
     public abstract List<CartItem> getItems();
@@ -29,4 +31,8 @@ public interface ShoppingCart {
     public abstract void applyCoupon(Coupon coupon);
 
     public abstract List<Campaign> getAppliedCampaigns();
+
+    public abstract Integer getNumberOfProducts();
+
+    public abstract Integer getNumberOfCategories();
 }
